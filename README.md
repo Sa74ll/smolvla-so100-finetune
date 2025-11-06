@@ -8,45 +8,185 @@ Challenge goal: train **SmolVLA** on `lerobot/svla_so101_pickplace` with color a
 - **[📔 Run Eval script in Colab](https://colab.research.google.com/github/Sa74ll/ELM_challenge/blob/main/02_eval_offline.ipynb)** - Interactive notebook
 
 ---
-
 ## Files
 
 - `01_train.ipynb` – fine-tunes `lerobot/smolvla_base` 
 - `02_eval_offline.ipynb` 
 
-(You can open both in Colab.)
+---
+
+**Key Result**: Achieved **~60% average per-joint success** (within 5% tolerance) under color distribution shift.
 
 ---
 
-## Run in Colab
+## Architecture & Approach
 
-1. Open:
-   - Train: **[colab link](https://colab.research.google.com/github/Sa74ll/ELM_challenge/blob/main/01_train_smolvla.ipynb)**
-   - Eval: **[colab link](https://colab.research.google.com/github/Sa74ll/ELM_challenge/blob/main/02_eval_offline.ipynb)**
-2. `Runtime → Change runtime type → GPU`
-3. Run all cells.
+### Model: SmolVLA
+- Pre-trained vision-language-action policy from `lerobot/smolvla_base`
+- Autoregressive action prediction with **chunk size = 50**
+- Requires temporal alignment of observations and actions
+
+### Dataset: SO-100 Pick-Place
+- **Source**: `lerobot/svla_so101_pickplace` (50 episodes)
+- **Split**: Episodes 0-39 (train) | Episodes 40-49 (val)
+- **FPS**: 30 Hz
+- **Cameras**: `up` and `side` views
+- **Action space**: 6-DoF continuous control
+
+### Training Strategy
+- **Step-based training**: 25,000 steps (not epoch-based) to resume
+- **Color augmentation**: Different distributions for train vs. val
+- **Validation**: Every 1,000 steps
+- **Checkpoints**: Every 1,000 steps to resume whenever the Colab runtime craches
+---
+
+##  Implementation Details
+
+### 1. Alignment with the policy challenge
+
+**Problem**: Initial runs crashed with:
+```
+RuntimeError: The size of tensor a (227) must match the size of tensor b (178)
+```
+
+**Root Cause**: Model expects 50 action timesteps per forward pass, but dataset only provided 1.
+
+**Solution**: Constructed proper `delta_timestamps` aligned with model's `chunk_size` and dataset FPS:
+```python
+fps = 30  # from dataset metadata
+action_horizon = 50  # from policy.config.chunk_size
+
+delta_timestamps = {
+    "observation.state": [0.0],
+    "observation.images.up": [0.0],
+    "observation.images.side": [0.0],
+    "action": [i / fps for i in range(action_horizon)]  # [0.0, 0.033, 0.066, ...]
+}
+```
+This ensures the dataset fetches 50 future action steps at proper temporal intervals.
 
 ---
 
-## What I did
+### 2. Color Augmentation for Robustness
 
-- Dataset: `lerobot/svla_so101_pickplace`
-- Split by **episode**: train 0–39, val 40–49
-- Train augs: wider color jitter
-- Val augs: slightly darker different / narrower
-- Camera keys mapped: `observation.images.up/side → observation.images.camera1/2`
-- Pre/post-processors built from the policy config + dataset stats
+**Train Configuration** (normal distribution):
+```python
+train_transforms = ImageTransformsConfig(
+    enable=True,
+    max_num_transforms=4,
+    random_order=True,
+    tfs={
+        "brightness": ImageTransformConfig(
+            weight=1.0, type="ColorJitter", kwargs={"brightness": (0.8, 1.2)}
+        ),
+        "contrast": ImageTransformConfig(
+            weight=1.0, type="ColorJitter", kwargs={"contrast": (0.8, 1.2)}
+        ),
+        "saturation": ImageTransformConfig(
+            weight=1.0, type="ColorJitter", kwargs={"saturation": (0.5, 1.5)}
+        ),
+        "hue": ImageTransformConfig(
+            weight=1.0, type="ColorJitter", kwargs={"hue": (-0.05, 0.05)}
+        ),
+    },
+)
+```
+ 
+**Val Configuration** (shifted distribution - darker, higher contrast):
+```python
+val_transforms = ImageTransformsConfig(
+    enable=True,
+    max_num_transforms=4,
+    random_order=True,
+      tfs={
+        "brightness": ImageTransformConfig(
+            weight=1.0, type="ColorJitter", kwargs={"brightness": (0.7, 1.0)}
+        ),
+        "contrast": ImageTransformConfig(
+            weight=1.0, type="ColorJitter", kwargs={"contrast": (1.0, 1.3)}
+        ),
+        "saturation": ImageTransformConfig(
+            weight=1.0, type="ColorJitter", kwargs={"saturation": (0.5, 1.2)}
+        ),
+        "hue": ImageTransformConfig(
+            weight=1.0, type="ColorJitter", kwargs={"hue": (-0.08, 0.06)}
+        ),
+    }
+)
+```
+
+This tests the model's ability to generalize under lighting/color variations.
 
 ---
 
-## Results
+### 3. Episode-Based Splitting
 
-- Success: **60.9%**
-- GPU: Colab T4
-- Runtime 12.5 hours
+**Why it matters**: Prevents temporal data leakage between train and val sets.
+```python
+episode_idx = np.array(base_ds.hf_dataset["episode_index"])
+train_indices = [i for i, ep in enumerate(episode_idx) if ep < 40]
+val_indices = [i for i, ep in enumerate(episode_idx) if ep >= 40]
+
+# Final counts
+# Train: 9,180 samples | Val: 2,759 samples
+```
 
 ---
 
+### 4. Camera Key Remapping
+
+**Problem**: Dataset uses `observation.images.up` / `observation.images.side`, but SmolVLA expects `camera1` / `camera2`.
+
+**Solution**:
+```python
+def fix_keys(batch):
+    if "observation.images.up" in batch:
+        batch["observation.images.camera1"] = batch.pop("observation.images.up")
+    if "observation.images.side" in batch:
+        batch["observation.images.camera2"] = batch.pop("observation.images.side")
+    return batch
+```
+
+---
+
+## Evaluation Methodology
+
+### Challenge: Action Normalization
+
+**Problem #1**: Initial eval showed MAE in the thousands and success rate was 0%.
+
+**Root Cause**: Model outputs normalized actions, but ground truth is in original units.
+
+**Problem #2**: `policy.forward()` returns loss dict, not actions.
+
+**Solution**: Use policy.predict_action_chunk() + proper denormalization:
+```python
+1-
+pred_seq = policy.predict_action_chunk(batch)  # (B, 50, action_dim)
+pred_action = pred_seq[:, 0, :]  # First action in chunk
+
+2. Denormalize predictions
+meta = LeRobotDatasetMetadata(DATASET_REPO)
+action_mean = torch.tensor(meta.stats["action"]["mean"])
+action_std = torch.tensor(meta.stats["action"]["std"])
+
+pred_unnorm = pred_action * action_std + action_mean
+```
+
+### Final Results
+
+**Per-Joint Success @ 5% Tolerance**:
+```
+Joint 0 (x):     44.22%
+Joint 1 (y):     47.81%
+Joint 2 (z):     68.79%
+Joint 3 (roll):  55.34%
+Joint 4 (pitch): 62.18%
+Joint 5 (yaw):   84.81%
+
+Average: 60.52%
+```
+---
 ## References
 
 - Course: https://huggingface.co/spaces/lerobot/robot-learning-tutorial
