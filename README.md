@@ -180,14 +180,15 @@ pred_unnorm = pred_action * action_std + action_mean
 
 **Per-Joint Success @ 5% Tolerance**:
 ```
-Joint 0 (x):     44.22%
-Joint 1 (y):     47.81%
-Joint 2 (z):     68.79%
-Joint 3 (roll):  55.34%
-Joint 4 (pitch): 62.18%
-Joint 5 (yaw):   84.81%
+joint 0: 45.81%
+joint 1: 47.88%
+joint 2: 70.06%
+joint 3: 77.46%
+joint 4: 60.86%
+joint 5: 63.43%
 
-Average: 60.52%
+Average per-joint success (5%): 60.92%
+
 ```
 ---
 ## References
