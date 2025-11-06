@@ -76,7 +76,7 @@ This ensures the dataset fetches 50 future action steps at proper temporal inter
 ```python
 train_transforms = ImageTransformsConfig(
     enable=True,
-    max_num_transforms=4,
+    max_num_transforms=2,
     random_order=True,
     tfs={
         "brightness": ImageTransformConfig(
@@ -99,7 +99,7 @@ train_transforms = ImageTransformsConfig(
 ```python
 val_transforms = ImageTransformsConfig(
     enable=True,
-    max_num_transforms=4,
+    max_num_transforms=2,
     random_order=True,
       tfs={
         "brightness": ImageTransformConfig(
