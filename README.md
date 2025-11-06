@@ -1,7 +1,9 @@
 ## SmolVLA Color Augmentation Challenge
 
 ### Quick Start
-- **[📔 Run in Colab](your-colab-link)** - Interactive notebook
+- **[📔 Run Train script in Colab](your-colab-link)** - Interactive notebook
+- **[📔 Run Eval script in Colab](your-colab-link)** - Interactive notebook
+
 - **[📊 View Results](#results)** - Success rate: 60.92%
 
 ### Repository Structure
