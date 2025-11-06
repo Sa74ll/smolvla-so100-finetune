@@ -43,6 +43,7 @@ Challenge goal: train **SmolVLA** on `lerobot/svla_so101_pickplace` with color a
 
 - Success: **60.9%**
 - GPU: Colab T4
+- Runtime 12.5 hours
 
 ---
 
