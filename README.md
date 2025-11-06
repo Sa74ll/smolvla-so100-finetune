@@ -4,7 +4,7 @@
 - **[📔 Run Train script in Colab](https://colab.research.google.com/github/Sa74ll/ELM_challenge/blob/main/01_train_smolvla.ipynb)** - Interactive notebook
 - **[📔 Run Eval script in Colab](https://colab.research.google.com/github/Sa74ll/ELM_challenge/blob/main/02_eval_offline.ipynb)** - Interactive notebook
 
-- **[📊 View Results](#results)** - Success rate: 60.92%
+- **[📊 View Results](#Results.txt)** - Success rate: 60.92%
 
 ### Repository Structure
 This repo contains my solution for the color generalization challenge...
