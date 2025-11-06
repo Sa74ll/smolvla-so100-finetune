@@ -15,4 +15,4 @@ This repo contains my solution for the color generalization challenge...
 ### Results
 - ✅ Success Rate: 60.9% (Target: >50%)
 - Training Time: 12.5 hours on Colab T4
-- Best Validation Loss: X.XX
+
