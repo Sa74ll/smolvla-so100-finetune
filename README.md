@@ -1,5 +1,3 @@
-# README.md
-
 ## SmolVLA Color Augmentation Challenge
 
 ### Quick Start
