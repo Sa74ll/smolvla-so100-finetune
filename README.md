@@ -21,8 +21,8 @@ Challenge goal: train **SmolVLA** on `lerobot/svla_so101_pickplace` with color a
 ## Run in Colab
 
 1. Open:
-   - Train: **[[add Colab link](https://colab.research.google.com/github/Sa74ll/ELM_challenge/blob/main/01_train_smolvla.ipynb)]**
-   - Eval: **[[add Colab link](https://colab.research.google.com/github/Sa74ll/ELM_challenge/blob/main/02_eval_offline.ipynb)]**
+   - Train: **[(https://colab.research.google.com/github/Sa74ll/ELM_challenge/blob/main/01_train_smolvla.ipynb)]**
+   - Eval: **[(https://colab.research.google.com/github/Sa74ll/ELM_challenge/blob/main/02_eval_offline.ipynb)]**
 2. `Runtime → Change runtime type → GPU`
 3. Run all cells.
 
