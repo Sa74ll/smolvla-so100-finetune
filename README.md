@@ -38,6 +38,9 @@ Challenge goal: train **SmolVLA** on `lerobot/svla_so101_pickplace` with color a
 - **Color augmentation**: Different distributions for train vs. val
 - **Validation**: Every 1,000 steps
 - **Checkpoints**: Every 1,000 steps to resume whenever the Colab runtime craches
+
+Key point: `video_backend="pyav"` was used because the LeRobot issues mention torchvision video backend deprecations, the warning shows up, but pyav worked reliably in Colab.
+
 ---
 
 ##  Implementation Details
@@ -192,3 +195,4 @@ Average: 60.52%
 - Course: https://huggingface.co/spaces/lerobot/robot-learning-tutorial
 - SmolVLA: https://huggingface.co/blog/smolvla
 - Dataset: https://huggingface.co/datasets/lerobot/svla_so101_pickplace
+  
