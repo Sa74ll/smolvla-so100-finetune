@@ -1,6 +1,6 @@
-## SmolVLA Color Aug Challenge
+## SmolVLA Colour Aug Challenge
 
-Challenge goal: train **SmolVLA** on `lerobot/svla_so101_pickplace` with color augmentation in **training** and show it still works when **validation** uses a different color setup.
+Challenge goal: train **SmolVLA** on `lerobot/svla_so101_pickplace` with colour augmentation in **training** and show it still works when **validation** uses a different colour setup.
 
 
 ### Quick Start
@@ -15,7 +15,7 @@ Challenge goal: train **SmolVLA** on `lerobot/svla_so101_pickplace` with color a
 
 ---
 
-**Key Result**: Achieved **~60% average per-joint success** (within 5% tolerance) under color distribution shift.
+**Key Result**: Achieved **60% average per-joint success** (within 5% tolerance) under colour distribution shift.
 
 ---
 
@@ -35,11 +35,11 @@ Challenge goal: train **SmolVLA** on `lerobot/svla_so101_pickplace` with color a
 
 ### Training Strategy
 - **Step-based training**: 25,000 steps (not epoch-based) to resume
-- **Color augmentation**: Different distributions for train vs. val
+- **Colour augmentation**: Different distributions for train vs. val
 - **Validation**: Every 1,000 steps
-- **Checkpoints**: Every 1,000 steps to resume whenever the Colab runtime craches
+- **Checkpoints**: Every 1,000 steps to resume whenever the Colab runtime crashes
 
-Key point: `video_backend="pyav"` was used because the LeRobot issues mention torchvision video backend deprecations, the warning shows up, but pyav worked reliably in Colab.
+Key point: `video_backend="pyav"` was used because the LeRobot issues mention torchvision video backend deprecations the warning shows up, but pyav worked reliably in Colab.
 
 ---
 
@@ -70,7 +70,7 @@ This ensures the dataset fetches 50 future action steps at proper temporal inter
 
 ---
 
-### 2. Color Augmentation for Robustness
+### 2. Colour Augmentation for Robustness
 
 **Train Configuration** (normal distribution):
 ```python
@@ -118,7 +118,7 @@ val_transforms = ImageTransformsConfig(
 )
 ```
 
-This tests the model's ability to generalize under lighting/color variations.
+This tests the model's ability to generalise under lighting/colour variations.
 
 ---
 
@@ -154,11 +154,11 @@ def fix_keys(batch):
 
 ## Evaluation Methodology
 
-### Challenge: Action Normalization
+### Challenge: Action Normalisation
 
 **Problem #1**: Initial eval showed MAE in the thousands and success rate was 0%.
 
-**Root Cause**: Model outputs normalized actions, but ground truth is in original units.
+**Root Cause**: Model outputs normalised actions, but ground truth is in original units.
 
 **Problem #2**: `policy.forward()` returns loss dict, not actions.
 
@@ -168,7 +168,7 @@ def fix_keys(batch):
 pred_seq = policy.predict_action_chunk(batch)  # (B, 50, action_dim)
 pred_action = pred_seq[:, 0, :]  # First action in chunk
 
-2. Denormalize predictions
+2. Denormalise predictions
 meta = LeRobotDatasetMetadata(DATASET_REPO)
 action_mean = torch.tensor(meta.stats["action"]["mean"])
 action_std = torch.tensor(meta.stats["action"]["std"])
@@ -196,4 +196,4 @@ Average per-joint success (5%): 60.92%
 - Course: https://huggingface.co/spaces/lerobot/robot-learning-tutorial
 - SmolVLA: https://huggingface.co/blog/smolvla
 - Dataset: https://huggingface.co/datasets/lerobot/svla_so101_pickplace
-  
+- LeRobot: https://github.com/huggingface/lerobot
