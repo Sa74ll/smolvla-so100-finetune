@@ -59,7 +59,7 @@ RuntimeError: The size of tensor a (227) must match the size of tensor b (178)
 fps = 30  # from dataset metadata
 action_horizon = 50  # from policy.config.chunk_size
 
-delta_timestamps = {
+delta_timestamps = {                   # from robot learning tutorial
     "observation.state": [0.0],
     "observation.images.up": [0.0],
     "observation.images.side": [0.0],
@@ -74,7 +74,8 @@ This ensures the dataset fetches 50 future action steps at proper temporal inter
 
 **Train Configuration** (normal distribution):
 ```python
-train_transforms = ImageTransformsConfig(
+train_transforms = ImageTransformsConfig    # from lerobot.datasets.transforms
+(                  
     enable=True,
     max_num_transforms=2,
     random_order=True,
@@ -97,7 +98,8 @@ train_transforms = ImageTransformsConfig(
  
 **Val Configuration** (shifted distribution - darker, higher contrast):
 ```python
-val_transforms = ImageTransformsConfig(
+val_transforms = ImageTransformsConfig    # from lerobot.datasets.transforms
+( 
     enable=True,
     max_num_transforms=2,
     random_order=True,
