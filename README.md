@@ -4,8 +4,8 @@ Challenge goal: train **SmolVLA** on `lerobot/svla_so101_pickplace` with colour 
 
 
 ### Quick Start
-- **[📔 Run Train script in Colab](https://colab.research.google.com/github/Sa74ll/ELM_challenge/blob/main/01_train_smolvla.ipynb)** - Interactive notebook
-- **[📔 Run Eval script in Colab](https://colab.research.google.com/github/Sa74ll/ELM_challenge/blob/main/02_eval_offline.ipynb)** - Interactive notebook
+- **[📔 Train script in Colab](https://colab.research.google.com/github/Sa74ll/ELM_challenge/blob/main/01_train_smolvla.ipynb)** - Interactive notebook
+- **[📔 Eval script in Colab](https://colab.research.google.com/github/Sa74ll/ELM_challenge/blob/main/02_eval_offline.ipynb)** - Interactive notebook
 
 ---
 ## Files
