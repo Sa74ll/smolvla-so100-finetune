@@ -33,6 +33,7 @@ A robust Vision-Language-Action (VLA) training pipeline for robotic manipulation
 * **Split Strategy:** Strict episode-based splitting to prevent temporal leakage.
     * **Train:** Episodes 0–39 (9,180 samples)
     * **Val:** Episodes 40–49 (2,759 samples)
+      
 ### 🎥 Episode Preview
 
 <video src="https://github.com/user-attachments/assets/2b3d4491-bd0e-4e20-a902-aca05525c08d" controls="controls" style="max-width: 100%;">
