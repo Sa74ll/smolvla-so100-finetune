@@ -189,7 +189,8 @@ Average per-joint success (5%): 60.92%
 ```
 ## Quick Start
 ```bash
-
+   # Clone the repo
+   https://github.com/Sa74ll/smolvla-so100-finetune.git
    # Run training (in Colab or local)
    jupyter notebook 01_train_smolvla.ipynb
    
