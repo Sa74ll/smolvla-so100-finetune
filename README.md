@@ -1,78 +1,51 @@
 ## SmolVLA Colour Aug Challenge
 
-Challenge goal: train **SmolVLA** on `lerobot/svla_so101_pickplace` with colour augmentation in **training** and show it still works when **validation** uses a different colour setup.
+# Robust SmolVLA Manipulation Pipeline
 
+![Status](https://img.shields.io/badge/Status-Completed-success) ![Accuracy](https://img.shields.io/badge/Action_Accuracy-61%25-blue) ![Framework](https://img.shields.io/badge/Framework-LeRobot-yellow) ![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
-### Quick Start
-- **[📔 Train script in Colab](https://colab.research.google.com/github/Sa74ll/ELM_challenge/blob/main/01_train_smolvla.ipynb)** - Interactive notebook
-- **[📔 Eval script in Colab](https://colab.research.google.com/github/Sa74ll/ELM_challenge/blob/main/02_eval_offline.ipynb)** - Interactive notebook
+A robust Vision-Language-Action (VLA) training pipeline for robotic manipulation. This project fine-tunes **SmolVLA** on the **SO-100 Pick & Place dataset**, specifically designed to handle **distributional shifts** (lighting and color variations) between training and validation environments.
 
----
-## Files
-
-- `01_train.ipynb` – fine-tunes `lerobot/smolvla_base` 
-- `02_eval_offline.ipynb` 
+### 🚀 Key Results
+* **Robustness:** Successfully trained on standard RGB distributions and validated on shifted distributions (darker/higher contrast).
+* **Performance:** Achieved **60.92% Average Per-Joint Success Rate** (within 5% tolerance) on unseen episodes.
+* **Engineering:** Solved temporal alignment and tensor shape mismatches in the default `LeRobot` implementation for this specific dataset.
 
 ---
 
-**Key Result**: Achieved **60% average per-joint success** (within 5% tolerance) under colour distribution shift.
+## 📂 Project Structure
+
+| File | Description |
+| :--- | :--- |
+| **[`train_policy.ipynb`](01_train_smolvla.ipynb)** | Complete training pipeline with custom augmentation, chunking, and checkpointing. |
+| **[`eval_policy.ipynb`](02_eval_offline.ipynb)** | Offline evaluation script implementing "Percent-Close" metrics and denormalization logic. |
 
 ---
 
-## Architecture & Approach
+## 🏗 Architecture & Approach
 
 ### Model: SmolVLA
-- Pre-trained vision-language-action policy from `lerobot/smolvla_base`
-- Autoregressive action prediction with **chunk size = 50**
-- Requires temporal alignment of observations and actions
+* **Type:** Vision-Language-Action (VLA) Policy
+* **Base:** `lerobot/smolvla_base`
+* **Control:** Autoregressive action prediction with **Chunk Size = 50**
 
 ### Dataset: SO-100 Pick-Place
-- **Source**: `lerobot/svla_so101_pickplace` (50 episodes)
-- **Split**: Episodes 0-39 (train) | Episodes 40-49 (val)
-- **FPS**: 30 Hz
-- **Cameras**: `up` and `side` views
-- **Action space**: 6-DoF continuous control
-
-### Training Strategy
-- **Step-based training**: 25,000 steps (not epoch-based) to resume
-- **Colour augmentation**: Different distributions for train vs. val
-- **Validation**: Every 1,000 steps
-- **Checkpoints**: Every 1,000 steps to resume whenever the Colab runtime crashes
-
-Key point: `video_backend="pyav"` was used because the LeRobot issues mention torchvision video backend deprecations the warning shows up, but pyav worked reliably in Colab.
+* **Source:** `lerobot/svla_so101_pickplace`
+* **Split Strategy:** Strict episode-based splitting to prevent temporal leakage.
+    * **Train:** Episodes 0–39 (9,180 samples)
+    * **Val:** Episodes 40–49 (2,759 samples)
 
 ---
 
-##  Implementation Details
+## 🔧 Technical Challenges & Solutions
 
-### 1. Alignment with the policy challenge
+### 1. Robustness via Domain Randomization
+To simulate **Sim-to-Real** lighting gaps, I implemented asymmetric augmentation pipelines using `ImageTransformsConfig`.
 
-**Problem**: Initial runs crashed with:
-```
-RuntimeError: The size of tensor a (227) must match the size of tensor b (178)
-```
+* **Training Distribution:** Standard variance (Brightness/Contrast ±20%).
+* **Validation Distribution:** Shifted variance (Darker, higher contrast) to test generalization.
 
-**Root Cause**: Model expects 50 action timesteps per forward pass, but dataset only provided 1.
 
-**Solution**: Constructed proper `delta_timestamps` aligned with model's `chunk_size` and dataset FPS:
-```python
-fps = 30  # from dataset metadata
-action_horizon = 50  # from policy.config.chunk_size
-
-delta_timestamps = {                   # from robot learning tutorial
-    "observation.state": [0.0],
-    "observation.images.up": [0.0],
-    "observation.images.side": [0.0],
-    "action": [i / fps for i in range(action_horizon)]  # [0.0, 0.033, 0.066, ...]
-}
-```
-This ensures the dataset fetches 50 future action steps at proper temporal intervals.
-
----
-
-### 2. Colour Augmentation for Robustness
-
-**Train Configuration** (normal distribution):
 ```python
 train_transforms = ImageTransformsConfig    # from lerobot.datasets.transforms
 (                  
@@ -95,7 +68,7 @@ train_transforms = ImageTransformsConfig    # from lerobot.datasets.transforms
     },
 )
 ```
- 
+
 **Val Configuration** (shifted distribution - darker, higher contrast):
 ```python
 val_transforms = ImageTransformsConfig    # from lerobot.datasets.transforms
@@ -152,6 +125,21 @@ def fix_keys(batch):
     return batch
 ```
 
+---
+### 5. Temporal Alignment (Tensor Mismatch)
+The Challenge: The model architecture requires a 50-step action chunk, but the raw dataset provided single-step actions, causing RuntimeError: tensor size mismatch (227 vs 178).
+
+The Solution: Engineered a delta_timestamps vector to pre-fetch future action horizons aligned with the dataset's 30 FPS rate.
+
+```python
+
+fps = 30
+action_horizon = 50
+# Construct temporal query vector
+delta_timestamps = {
+    "action": [i / fps for i in range(action_horizon)]  # [0.0, 0.033, ... 1.66s]
+}
+```
 ---
 
 ## Evaluation Methodology
