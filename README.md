@@ -45,6 +45,8 @@ To simulate **Sim-to-Real** lighting gaps, I implemented asymmetric augmentation
 * **Training Distribution:** Standard variance (Brightness/Contrast ±20%).
 * **Validation Distribution:** Shifted variance (Darker, higher contrast) to test generalization.
 
+![Augmentation Preview](aug_image1.jpeg)
+*Figure 1: Comparison of Raw inputs vs. Augmented Training (Center) and Shifted Validation (Right). Note the darker lighting conditions in the validation set.*
 
 ```python
 train_transforms = ImageTransformsConfig    # from lerobot.datasets.transforms
