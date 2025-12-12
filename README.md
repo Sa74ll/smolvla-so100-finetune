@@ -104,7 +104,7 @@ This tests the model's ability to generalise under lighting/colour variations.
 
 ---
 
-### 3. Episode-Based Splitting
+### 2. Episode-Based Splitting
 
 **Why it matters**: Prevents temporal data leakage between train and val sets.
 ```python
@@ -118,7 +118,7 @@ val_indices = [i for i, ep in enumerate(episode_idx) if ep >= 40]
 
 ---
 
-### 4. Camera Key Remapping
+### 3. Camera Key Remapping
 
 **Problem**: Dataset uses `observation.images.up` / `observation.images.side`, but SmolVLA expects `camera1` / `camera2`.
 
@@ -133,7 +133,7 @@ def fix_keys(batch):
 ```
 
 ---
-### 5. Temporal Alignment (Tensor Mismatch)
+### 4. Temporal Alignment (Tensor Mismatch)
 The Challenge: The model architecture requires a 50-step action chunk, but the raw dataset provided single-step actions, causing RuntimeError: tensor size mismatch (227 vs 178).
 
 The Solution: Engineered a delta_timestamps vector to pre-fetch future action horizons aligned with the dataset's 30 FPS rate.
