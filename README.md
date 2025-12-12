@@ -203,8 +203,9 @@ huggingface-cli login
 ```
 ## Quick Start
 ```bash
-   # Clone the repo
-   https://github.com/Sa74ll/smolvla-so100-finetune.git
+   # Clone this repo
+   git clone https://github.com/Sa74ll/smolvla-so100-finetune.git
+   cd smolvla-so100-finetune
 
    # Run training (in Colab or local)
    jupyter notebook 01_train_smolvla.ipynb
