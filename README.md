@@ -187,6 +187,20 @@ joint 5: 63.43%
 Average per-joint success (5%): 60.92%
 
 ```
+## Installation
+```bash
+# 1. Clone and install LeRobot with SmolVLA support
+git clone https://github.com/huggingface/lerobot.git
+cd lerobot
+pip install -e ".[smolvla]"
+
+# 2. Install additional dependencies
+pip install wandb num2words==0.5.14
+
+# 3. Login to Hugging Face (required for downloading datasets/models)
+huggingface-cli login
+
+```
 ## Quick Start
 ```bash
    # Clone the repo
