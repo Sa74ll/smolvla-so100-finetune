@@ -187,6 +187,17 @@ joint 5: 63.43%
 Average per-joint success (5%): 60.92%
 
 ```
+## Quick Start
+```bash
+   # Install dependencies
+   pip install lerobot torch wandb
+   
+   # Run training (in Colab or local)
+   jupyter notebook 01_train_smolvla.ipynb
+   
+   # Run evaluation
+   jupyter notebook 02_eval_offline.ipynb
+```
 ---
 ## References
 
