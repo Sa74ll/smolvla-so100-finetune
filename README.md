@@ -2,7 +2,7 @@
 
 # Robust SmolVLA Manipulation Pipeline
 
-![Status](https://img.shields.io/badge/Status-Completed-success) !https://img.shields.io/badge/Model-SmolVLA-orange ![Accuracy](https://img.shields.io/badge/Action_Accuracy-61%25-blue) ![Framework](https://img.shields.io/badge/Framework-LeRobot-yellow) ![License](https://img.shields.io/badge/License-MIT-lightgrey)
+![Status](https://img.shields.io/badge/Status-Completed-success) ![Model](https://img.shields.io/badge/Model-SmolVLA-orange) ![Accuracy](https://img.shields.io/badge/Action_Accuracy-61%25-blue) ![Framework](https://img.shields.io/badge/Framework-LeRobot-yellow) ![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
 A robust Vision-Language-Action (VLA) training pipeline for robotic manipulation. This project fine-tunes **SmolVLA** on the **SO-100 Pick & Place dataset**, specifically designed to handle **distributional shifts** (lighting and color variations) between training and validation environments.
 
