@@ -1,6 +1,5 @@
-## SmolVLA Colour Aug Challenge
+# SmolVLA Finetuning: Robotic Manipulation with Color Robustness
 
-# Robust SmolVLA Manipulation Pipeline
 
 ![Status](https://img.shields.io/badge/Status-Completed-success) ![Model](https://img.shields.io/badge/Model-SmolVLA-orange) ![Accuracy](https://img.shields.io/badge/Action_Accuracy-61%25-blue) ![Framework](https://img.shields.io/badge/Framework-LeRobot-yellow) ![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
