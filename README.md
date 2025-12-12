@@ -35,9 +35,9 @@ A robust Vision-Language-Action (VLA) training pipeline for robotic manipulation
     * **Train:** Episodes 0–39 (9,180 samples)
     * **Val:** Episodes 40–49 (2,759 samples)
 ### 🎥 Episode Preview
-*[Screencast from 2025-12-12 19-22-09.webm]
-*
+[Screencast from 2025-12-12 19-22-09.webm](https://github.com/user-attachments/assets/2b3d4491-bd0e-4e20-a902-aca05525c08d)
 ---
+
 
 ## 🔧 Technical Challenges & Solutions
 
