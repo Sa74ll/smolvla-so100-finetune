@@ -1,9 +1,9 @@
-# SmolVLA Finetuning: Robotic Manipulation with Color Robustness
+# SmolVLA Finetuning: Robotic Manipulation with Colour Robustness
 
 
 ![Status](https://img.shields.io/badge/Status-Completed-success) ![Model](https://img.shields.io/badge/Model-SmolVLA-orange) ![Accuracy](https://img.shields.io/badge/Action_Accuracy-61%25-blue) ![Framework](https://img.shields.io/badge/Framework-LeRobot-yellow) ![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
-A robust Vision-Language-Action (VLA) training pipeline for robotic manipulation. This project fine-tunes **SmolVLA** on the **SO-100 Pick & Place dataset**, specifically designed to handle **distributional shifts** (lighting and color variations) between training and validation environments.
+A robust Vision-Language-Action (VLA) training pipeline for robotic manipulation. This project fine-tunes **SmolVLA** on the **SO-100 Pick & Place dataset**, specifically designed to handle **distributional shifts** (lighting and colour variations) between training and validation environments.
 
 ### 🚀 Key Results
 * **Robustness:** Successfully trained on standard RGB distributions and validated on shifted distributions (darker/higher contrast).
