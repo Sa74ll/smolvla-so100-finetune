@@ -136,7 +136,7 @@ def fix_keys(batch):
 ### 4. Temporal Alignment (Tensor Mismatch)
 The Challenge: The model architecture requires a 50-step action chunk, but the raw dataset provided single-step actions, causing RuntimeError: tensor size mismatch (227 vs 178).
 
-The Solution: Engineered a delta_timestamps vector to pre-fetch future action horizons aligned with the dataset's 30 FPS rate.
+The Solution: implemented a delta_timestamps vector to pre-fetch future action horizons aligned with the dataset's 30 FPS rate.
 
 ```python
 
