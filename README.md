@@ -37,7 +37,7 @@ I aimed to fine-tune SmolVLA on the SO-101 pick-and-place dataset with color aug
 Something felt wrong. The validation loss was 5x higher than training loss. I tried the usual fixes:
 
 **Attempts that didn't work:**
-1. **Increased weight decay:** 0.001 → 0.01 → 0.1 → 0.2
+1. **Increased weight decay:** 0.001 -> 0.01 -> 0.1 -> 0.2
    - Result: Minimal improvement (~5%)
    
 2. **Adjusted color augmentation:** Tried various brightness/contrast combinations
