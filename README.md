@@ -172,6 +172,7 @@ With only 50 episodes (40 for training):
 <video src="https://github.com/user-attachments/assets/2b3d4491-bd0e-4e20-a902-aca05525c08d" controls="controls" style="max-width: 100%;">
 </video>
 --- 
+
 ## 🔧 Technical Challenges Solved
 
 ### 1. Temporal Alignment (Action Chunk Mismatch)
